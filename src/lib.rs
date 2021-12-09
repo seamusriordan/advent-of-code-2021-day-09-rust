@@ -35,19 +35,27 @@ impl Grid {
         Some(self.values[j as usize][i as usize])
     }
 
-    pub fn get_risk_level(&self) -> i32 {
-        let mut risk = 0;
+    pub fn get_basins(&self) -> Vec<Vec<(i32,i32)>> {
+        let mut basins = vec![];
 
         for j in 0..self.values.len() {
             for i in 0..self.values[j].len() {
-                risk += self.get_risk_for_point(i, j);
+                if self.is_low_point(i, j) {
+                    let mut basin = vec![];
+
+                    self.get_basin(i as i32, j as i32, &mut basin);
+
+                    basins.push(basin);
+                }
             }
         }
 
-        risk
+        basins.sort_by_key(|b| { b.len() });
+        basins.reverse();
+        basins
     }
 
-    fn get_risk_for_point(&self, i: usize, j: usize) -> i32 {
+    fn is_low_point(&self, i: usize, j: usize) -> bool {
         let i_i32 = i as i32;
         let j_i32 = j as i32;
 
@@ -63,10 +71,31 @@ impl Grid {
         for p in adjacent_points {
             if let Some(adjacent_value) = self.get_value(p.0, p.1) {
                 if adjacent_value <= center_value {
-                    return 0;
+                    return false;
                 }
             }
         }
-        center_value + 1
+        true
+    }
+
+    fn get_basin(&self, i: i32, j: i32, basin: &mut Vec<(i32, i32)>) {
+        let adjacent_points = vec![
+            (i - 1, j),
+            (i, j - 1),
+            (i + 1, j),
+            (i, j + 1),
+        ];
+
+        basin.push((i,j));
+
+        let center_value = self.get_value(i, j).unwrap();
+
+        for p in adjacent_points {
+            if let Some(adjacent_value) = self.get_value(p.0, p.1) {
+                if adjacent_value >= center_value && adjacent_value != 9 && !basin.contains(&p) {
+                    self.get_basin(p.0, p.1, basin);
+                }
+            }
+        }
     }
 }

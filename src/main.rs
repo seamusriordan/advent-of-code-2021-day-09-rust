@@ -6,5 +6,6 @@ fn main() {
 
     let grid = Grid::new(input.lines());
 
-    println!("{}", grid.get_risk_level());
+    let basins = grid.get_basins();
+    println!("{}", basins[0].len()*basins[1].len()*basins[2].len());
 }

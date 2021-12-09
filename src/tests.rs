@@ -29,13 +29,14 @@ mod tests {
 
         let grid = Grid::new(lines);
 
-        assert_eq!(15, grid.get_risk_level());
+        let basins = grid.get_basins();
+        assert_eq!(4, basins.len());
     }
 
     #[test]
-    fn equal_values_cannot_be_low() {
+    fn top_three_basins_are_14_9_9() {
         let lines =
-            "2119943210
+            "2199943210
 3987894921
 9856789892
 8767896789
@@ -43,6 +44,10 @@ mod tests {
 
         let grid = Grid::new(lines);
 
-        assert_eq!(13, grid.get_risk_level());
+        let basins = grid.get_basins();
+
+        assert_eq!(14, basins[0].len());
+        assert_eq!(9, basins[1].len());
+        assert_eq!(9, basins[2].len());
     }
 }
