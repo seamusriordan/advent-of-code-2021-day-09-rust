@@ -6,5 +6,5 @@ fn main() {
 
     let grid = Grid::new(input.lines());
 
-    println!("{}", grid.get_value(0,0));
+    println!("{}", grid.get_risk_level());
 }
