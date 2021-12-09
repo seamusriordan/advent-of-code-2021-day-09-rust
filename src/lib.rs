@@ -40,30 +40,33 @@ impl Grid {
 
         for j in 0..self.values.len() {
             for i in 0..self.values[j].len() {
-                let mut is_low = true;
-                let v = self.get_value(i as i32, j as i32).unwrap();
-
-                let adjacent_points = vec![
-                    (i as i32 - 1, j as i32),
-                    (i as i32, j as i32 - 1),
-                    (i as i32 + 1, j as i32),
-                    (i as i32, j as i32 + 1),
-                ];
-
-                for p in adjacent_points {
-                    if let Some(x) = self.get_value(p.0, p.1) {
-                        if x <= v {
-                            is_low = false
-                        }
-                    }
-                }
-
-                if is_low {
-                    risk += v + 1;
-                }
+                risk += self.get_risk_for_point(i, j);
             }
         }
 
         risk
+    }
+
+    fn get_risk_for_point(&self, i: usize, j: usize) -> i32 {
+        let i_i32 = i as i32;
+        let j_i32 = j as i32;
+
+        let adjacent_points = vec![
+            (i_i32 - 1, j_i32),
+            (i_i32, j_i32 - 1),
+            (i_i32 + 1, j_i32),
+            (i_i32, j_i32 + 1),
+        ];
+
+        let center_value = self.get_value(i_i32, j_i32).unwrap();
+
+        for p in adjacent_points {
+            if let Some(adjacent_value) = self.get_value(p.0, p.1) {
+                if adjacent_value <= center_value {
+                    return 0;
+                }
+            }
+        }
+        center_value + 1
     }
 }
