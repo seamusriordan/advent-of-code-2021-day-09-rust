@@ -2,12 +2,12 @@ use std::str::Lines;
 
 mod tests;
 
-struct Grid {
+pub struct Grid {
     values: Vec<Vec<i32>>
 }
 
 impl Grid {
-    fn new(lines: Lines) -> Grid {
+    pub fn new(lines: Lines) -> Grid {
         let mut grid = Grid {
             values: Vec::<Vec<i32>>::new()
         };
@@ -23,13 +23,7 @@ impl Grid {
         grid
     }
 
-    fn set_values(&mut self, values: &Vec<Vec<i32>>) {
-        for (i, new_value) in values.clone().into_iter().enumerate() {
-            self.values[i] = new_value.clone()
-        }
-    }
-
-    fn get_value(&self, i: usize, j: usize) -> i32 {
+    pub fn get_value(&self, i: usize, j: usize) -> i32 {
         self.values[j][i]
     }
 }
